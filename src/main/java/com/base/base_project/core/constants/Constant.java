@@ -32,4 +32,20 @@ public class Constant {
         public static final Integer ERROR = 1;
         public static final Integer TIME_OUT = -1;
     }
+
+    //Bổ sung thêm method khi tạo service
+    public static final class Method{
+        public static final String CREATE = "create";
+        public static final String UPDATE = "update";
+        public static final String DELETE = "delete";
+        public static final String GET_ONE = "get_one";
+        public static final String GET_ALL = "get_all";
+    }
+
+    public static final class EntityStatus {
+        public static final Integer IN_ACTIVE = 0;
+        public static final Integer ACTIVE = 1;
+        public static final Integer REGISTER = 2;
+        public static final Integer DELETED = 3;
+    }
 }
