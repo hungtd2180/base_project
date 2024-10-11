@@ -90,6 +90,14 @@
             <artifactId>tomcat-embed-core</artifactId>
             <version>8.5.23</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.javers/javers-core -->
+        <dependency>
+            <groupId>org.javers</groupId>
+            <artifactId>javers-core</artifactId>
+            <version>6.4.2</version>
+        </dependency>
+
+
 
 
     </dependencies>
