@@ -1,4 +1,4 @@
-package com.base.base_project.entities.dto;
+package com.base.base_project.core.entities.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

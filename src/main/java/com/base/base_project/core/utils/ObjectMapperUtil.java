@@ -1,4 +1,4 @@
-package com.base.base_project.utils;
+package com.base.base_project.core.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;

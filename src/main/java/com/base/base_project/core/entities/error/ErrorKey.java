@@ -1,4 +1,4 @@
-package com.base.base_project.entities.error;
+package com.base.base_project.core.entities.error;
 
 
 /**

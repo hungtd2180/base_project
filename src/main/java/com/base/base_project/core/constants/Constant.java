@@ -1,4 +1,4 @@
-package com.base.base_project.constants;
+package com.base.base_project.core.constants;
 
 /**
  * Created by hungtd

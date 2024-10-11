@@ -1,7 +1,7 @@
-package com.base.base_project.entities.event;
+package com.base.base_project.core.entities.event;
 
 
-import com.base.base_project.constants.Constant;
+import com.base.base_project.core.constants.Constant;
 
 import java.io.Serializable;
 import java.util.UUID;

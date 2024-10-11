@@ -1,4 +1,4 @@
-package com.base.base_project.converters;
+package com.base.base_project.core.converters;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;

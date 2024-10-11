@@ -1,9 +1,9 @@
-package com.base.base_project.utils;
+package com.base.base_project.core.utils;
 
-import com.base.base_project.constants.Constant;
-import com.base.base_project.entities.dto.ApiOutput;
-import com.base.base_project.entities.error.ErrorInfo;
-import com.base.base_project.entities.event.Event;
+import com.base.base_project.core.constants.Constant;
+import com.base.base_project.core.entities.dto.ApiOutput;
+import com.base.base_project.core.entities.error.ErrorInfo;
+import com.base.base_project.core.entities.event.Event;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;

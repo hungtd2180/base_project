@@ -1,4 +1,4 @@
-package com.base.base_project.converters;
+package com.base.base_project.core.converters;
 
 public interface EntityConvert <E, D>{
     E toEntity(D d);
