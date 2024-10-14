@@ -15,5 +15,5 @@ import java.io.Serializable;
  */
 
 public interface CustomJpaRepository <T extends IdEntity, ID extends Serializable> extends JpaRepository<T, ID>, JpaSpecificationExecutor<T> {
-    T findFistById(ID id);
+    T findFirstById(ID id);
 }

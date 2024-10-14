@@ -1,9 +1,10 @@
 package com.base.base_project.core.services;
 
 
-import com.base.base_project.core.configuration.IgnoreLogConfiguration;
 import com.base.base_project.core.constants.Constant;
 import com.base.base_project.core.entities.dto.IdEntity;
+import com.base.base_project.core.entities.error.ErrorInfo;
+import com.base.base_project.core.entities.error.ErrorKey;
 import com.base.base_project.core.entities.event.Event;
 import com.base.base_project.core.repositories.CustomJpaRepository;
 import com.base.base_project.core.utils.ObjectMapperUtil;
@@ -14,7 +15,6 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 
 import java.io.Serializable;
@@ -37,8 +37,6 @@ public abstract class CrudService<T extends IdEntity, ID extends Serializable> {
     protected EntityManager entityManager;
     protected MessageSource messageSource;
 
-    @Autowired
-    protected IgnoreLogConfiguration ignoreLogConfiguration;
 
     public CrudService(Class<T> typeParameterClass) {
         this.typeParameterClass = typeParameterClass;
@@ -46,35 +44,26 @@ public abstract class CrudService<T extends IdEntity, ID extends Serializable> {
 
     public Event process(Event event) {
         event.errorCode = Constant.ResultStatus.SUCCESS;
-        writeLogToFile(typeParameterClass.getSimpleName(), event.method, event.payload, "start");
         switch (event.method) {
             case Constant.Method.CREATE:
                 event = processCreate(event);
                 break;
             case Constant.Method.UPDATE:
+                event = processUpdate(event);
                 break;
             case Constant.Method.DELETE:
+                event = processDelete(event);
                 break;
             case Constant.Method.GET_ONE:
+                event = processGet(event);
                 break;
             case Constant.Method.GET_ALL:
+                event = processGetAll(event);
                 break;
             default:
                 event.errorCode = Constant.ResultStatus.ERROR;
         }
-        writeLogToFile(typeParameterClass.getSimpleName(), event.method, event.payload, "end");
         return event;
-    }
-
-
-    protected void writeLogToFile(String className, String methodName, String payload, String status) {
-        Long currentId = 0L; //Thay đổi khi có id thực tế
-        String ignoreLogValue = ignoreLogConfiguration.getIgnoreLog().get(className);
-        if (ignoreLogValue != null && ignoreLogValue.equals(methodName)) {
-            //Bỏ qua ghi log
-            return;
-        }
-        logger.info("ClassName {} userId {} Method {} {} Entity #{}", className, currentId, methodName, status, payload);
     }
 
     public Event processCreate(Event event) {
@@ -87,10 +76,32 @@ public abstract class CrudService<T extends IdEntity, ID extends Serializable> {
     public Event processUpdate(Event event) {
         T entity = ObjectMapperUtil.objectMapper(event.payload, typeParameterClass);
         if (entity.getId() == null || get((ID) entity.getId()) == null ) {
-            return event; //Thêm xử lí lỗi handle ErrorMessage
+            return handleErrorMessage(event, ErrorKey.CommonErrorKey.NOT_FOUND_ID);
         }
         event.payload = ObjectMapperUtil.toJsonString(update((ID) entity.getId(), entity));
         event.errorCode = Constant.ResultStatus.SUCCESS;
+        return event;
+    }
+
+    public Event processDelete(Event event) {
+        T entity = ObjectMapperUtil.objectMapper(event.payload, typeParameterClass);
+        delete(entity);
+        event.errorCode = Constant.ResultStatus.SUCCESS;
+        return event;
+    }
+
+    public Event processGet(Event event) {
+        T entity = ObjectMapperUtil.objectMapper(event.payload, typeParameterClass);
+        T data = get((ID) entity.getId());
+        event.errorCode = Constant.ResultStatus.SUCCESS;
+        event.payload = ObjectMapperUtil.toJsonString(data);
+        return event;
+    }
+
+    public Event processGetAll(Event event) {
+        List<T> data = getAll();
+        event.errorCode = Constant.ResultStatus.SUCCESS;
+        event.payload = ObjectMapperUtil.toJsonString(data);
         return event;
     }
 
@@ -169,5 +180,17 @@ public abstract class CrudService<T extends IdEntity, ID extends Serializable> {
 
     protected void afterDelete(T entity) {
         // Làm gì đó thì override
+    }
+
+    public T findFirstById(ID id) {
+        return repository.findFirstById(id);
+    }
+
+    public Event handleErrorMessage(Event event, String key) {
+        ErrorInfo errorInfo = new ErrorInfo();
+        errorInfo.setErrorKey(key);
+        event.errorCode = Constant.ResultStatus.ERROR;
+        event.payload = ObjectMapperUtil.toJsonString(errorInfo);
+        return event;
     }
 }
