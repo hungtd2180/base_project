@@ -34,19 +34,16 @@ public abstract class CrudEndpoint<T extends IdEntity, ID extends Serializable> 
 
     protected String baseUrl;
 
-    public CrudEndpoint(CrudService service) {
+    public CrudEndpoint(CrudService<T , ID> service) {
         this.service = service;
     }
     @GetMapping(value = "{id}")
     public ApiOutput get(@PathVariable ID id) {
-        Map<String, String> entityId = new HashMap<>();
-        entityId.put("id", id.toString());
         Event event = new Event();
         event.method = Constant.Method.GET_ONE;
-        event.payload = ObjectMapperUtil.objectMapper(entityId.toString(), entityClass);
+        event.payload = id.toString();
         service.process(event);
-        ApiOutput apiOutput = CommonUtil.packing(event);
-        return apiOutput;
+        return CommonUtil.packing(event);
     }
 
     @GetMapping
@@ -54,8 +51,7 @@ public abstract class CrudEndpoint<T extends IdEntity, ID extends Serializable> 
         Event event = new Event();
         event.method = Constant.Method.GET_ALL;
         service.process(event);
-        ApiOutput apiOutput = CommonUtil.packing(event);
-        return apiOutput;
+        return CommonUtil.packing(event);
     }
 
     @PostMapping
@@ -64,8 +60,7 @@ public abstract class CrudEndpoint<T extends IdEntity, ID extends Serializable> 
         event.method = Constant.Method.CREATE;
         event.payload = ObjectMapperUtil.objectMapper(entity.toString(), entityClass);
         service.process(event);
-        ApiOutput apiOutput = CommonUtil.packing(event);
-        return apiOutput;
+        return CommonUtil.packing(event);
     }
 
     @PutMapping
@@ -74,20 +69,16 @@ public abstract class CrudEndpoint<T extends IdEntity, ID extends Serializable> 
         event.method = Constant.Method.UPDATE;
         event.payload = ObjectMapperUtil.objectMapper(entity.toString(), entityClass);
         service.process(event);
-        ApiOutput apiOutput = CommonUtil.packing(event);
-        return apiOutput;
+        return CommonUtil.packing(event);
     }
 
     @DeleteMapping(value = "{id}")
     public ApiOutput delete(@PathVariable ID id) {
-        Map<String, String> entityId = new HashMap<>();
-        entityId.put("id", id.toString());
         Event event = new Event();
         event.method = Constant.Method.DELETE;
-        event.payload = ObjectMapperUtil.objectMapper(entityId.toString(), entityClass);
+        event.payload = id.toString();
         service.process(event);
-        ApiOutput apiOutput = CommonUtil.packing(event);
-        return apiOutput;
+        return CommonUtil.packing(event);
     }
 
 }

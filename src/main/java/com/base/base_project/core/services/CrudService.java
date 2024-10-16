@@ -84,15 +84,13 @@ public abstract class CrudService<T extends IdEntity, ID extends Serializable> {
     }
 
     public Event processDelete(Event event) {
-        T entity = ObjectMapperUtil.objectMapper(event.payload, typeParameterClass);
-        delete(entity);
+        deleteById((ID) event.payload);
         event.errorCode = Constant.ResultStatus.SUCCESS;
         return event;
     }
 
     public Event processGet(Event event) {
-        T entity = ObjectMapperUtil.objectMapper(event.payload, typeParameterClass);
-        T data = get((ID) entity.getId());
+        T data = get((ID) event.payload);
         event.errorCode = Constant.ResultStatus.SUCCESS;
         event.payload = ObjectMapperUtil.toJsonString(data);
         return event;
