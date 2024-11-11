@@ -1,7 +1,0 @@
-spring:
-  profiles:
-    active: local
-app:
-  node: '01'
-  service: ^project.artifactId^
-  version: ^project.version^
